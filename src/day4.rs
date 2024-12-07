@@ -67,8 +67,43 @@ pub fn parse_1(text: &str) -> i32 {
         + xscan(&diag(&mirror(&lines)))
 }
 
-pub fn parse_2(_text: &str) -> i32 {
-    0
+fn checkmas(c: u8, ms: &mut i32, ss: &mut i32) {
+    if c == b'M' {
+        *ms += 1;
+    }
+    if c == b'S' {
+        *ss += 1;
+    }
+}
+
+pub fn parse_2(text: &str) -> i32 {
+    let lines: Vec<_> = text
+        .lines()
+        .filter(|l| !l.is_empty())
+        .map(|s| s.as_bytes())
+        .collect();
+    let n_lines = lines.len();
+    let n_cols = lines[0].len();
+    let mut count = 0;
+
+    for i in 1..n_lines-1 {
+        for j in 1..n_cols-1 {
+            if lines[i][j] == b'A' {
+                let mut ms: i32 = 0;
+                let mut ss: i32 = 0;
+                checkmas(lines[i-1][j-1], &mut ms, &mut ss);
+                checkmas(lines[i+1][j-1], &mut ms, &mut ss);
+                checkmas(lines[i-1][j+1], &mut ms, &mut ss);
+                checkmas(lines[i+1][j+1], &mut ms, &mut ss);
+                if ms == 2 && ss == 2
+                    && lines[i-1][j-1] != lines[i+1][j+1] {
+                    count += 1;
+                }
+            }
+        }
+    }
+
+    count
 }
 
 #[cfg(test)]
@@ -87,14 +122,12 @@ SAXAMASAAA
 MAMMMXMMMM
 MXMXAXMASX
 ";
-    const INPUT_TEXT_2: &str = "
-";
     #[test]
     fn test_parse1() {
         assert_eq!(parse_1(&INPUT_TEXT_1), 18);
     }
     #[test]
     fn test_parse2() {
-        assert_eq!(parse_2(&INPUT_TEXT_2), 48);
+        assert_eq!(parse_2(&INPUT_TEXT_1), 9);
     }
 }
