@@ -1,6 +1,6 @@
 use regex::Regex;
 
-pub fn parse_1(text: &str) -> i32 {
+pub fn parse_1(text: &str) -> i64 {
     let re = Regex::new(r"mul\((\d+),(\d+)\)").unwrap();
     let mut s = 0;
 
@@ -10,10 +10,10 @@ pub fn parse_1(text: &str) -> i32 {
         s += left_int * right_int;
     }
 
-    s
+    s as i64
 }
 
-pub fn parse_2(text: &str) -> i32 {
+pub fn parse_2(text: &str) -> i64 {
     let re = Regex::new(r"(do\(\))|(don't\(\))|(mul\((\d+),(\d+)\))").unwrap();
     let mut s = 0;
     let mut enabled = true;
@@ -30,7 +30,7 @@ pub fn parse_2(text: &str) -> i32 {
         }
     }
 
-    s
+    s as i64
 }
 
 #[cfg(test)]

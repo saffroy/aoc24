@@ -1,7 +1,7 @@
 use regex::Regex;
 use std::collections::HashMap;
 
-pub fn parse_1(text: &str) -> i32 {
+pub fn parse_1(text: &str) -> i64 {
     let re = Regex::new(r"(\d+) +(\d+)").unwrap();
     let mut left: Vec<i32> = vec![];
     let mut right: Vec<i32> = vec![];
@@ -24,10 +24,10 @@ pub fn parse_1(text: &str) -> i32 {
         dist += (l - r).abs();
     }
 
-    dist
+    dist as i64
 }
 
-pub fn parse_2(text: &str) -> i32 {
+pub fn parse_2(text: &str) -> i64 {
     let re = Regex::new(r"(\d+) +(\d+)").unwrap();
     let mut left: Vec<i32> = vec![];
     let mut right = HashMap::new();
@@ -50,7 +50,7 @@ pub fn parse_2(text: &str) -> i32 {
         dist += l * (*rval);
     }
 
-    dist
+    dist as i64
 }
 
 #[cfg(test)]

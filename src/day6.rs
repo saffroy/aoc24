@@ -70,17 +70,17 @@ fn trace_patrol(grid: &Vec<Vec<u8>>, x0: usize, y0: usize, dir0: Direction)
     }
 }
 
-pub fn parse_1(text: &str) -> i32 {
+pub fn parse_1(text: &str) -> i64 {
     let (grid, x0, y0) = parse_grid(text);
     let (visited, out) = trace_patrol(&grid, x0, y0, Direction::N);
     assert_eq!(out, Outcome::Out);
 
     visited.iter().map(|row| {
-        row.iter().copied().filter(|&p| p).count() as i32
+        row.iter().copied().filter(|&p| p).count() as i64
     }).sum()
 }
 
-pub fn parse_2(text: &str) -> i32 {
+pub fn parse_2(text: &str) -> i64 {
     // parse grid
     // trace visited => candidates for obstacle
     // (remove init)
@@ -103,7 +103,7 @@ pub fn parse_2(text: &str) -> i32 {
             })
             .filter(|&out| out == Outcome::Loop)
             .count()
-    }).sum::<usize>() as i32
+    }).sum::<usize>() as i64
 }
 
 #[cfg(test)]

@@ -38,7 +38,7 @@ fn update_correct_p(rules: &RuleSet, update: &[i32]) -> bool {
     true
 }
 
-pub fn parse_1(text: &str) -> i32 {
+pub fn parse_1(text: &str) -> i64 {
     let (rules, updates) = parse_common(text);
     let mut sum = 0;
 
@@ -48,10 +48,10 @@ pub fn parse_1(text: &str) -> i32 {
         }
     }
 
-    sum
+    sum as i64
 }
 
-pub fn parse_2(text: &str) -> i32 {
+pub fn parse_2(text: &str) -> i64 {
     let (rules, updates) = parse_common(text);
     let mut sum = 0;
 
@@ -70,7 +70,7 @@ pub fn parse_2(text: &str) -> i32 {
         }
     }
 
-    sum
+    sum as i64
 }
 
 #[cfg(test)]

@@ -18,7 +18,7 @@ fn safe_report(levels: &[i32]) -> bool {
         })
 }
 
-pub fn parse_1(text: &str) -> i32 {
+pub fn parse_1(text: &str) -> i64 {
     let mut n_safe = 0;
 
     for line in text.lines() {
@@ -37,7 +37,7 @@ pub fn parse_1(text: &str) -> i32 {
 }
 
 
-pub fn parse_2(text: &str) -> i32 {
+pub fn parse_2(text: &str) -> i64 {
     let mut n_safe = 0;
 
     for line in text.lines() {

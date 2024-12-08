@@ -55,16 +55,16 @@ fn diag(lines_: &[String]) -> Vec<String> {
     vec.iter().map(|s| String::from_utf8(s.clone()).unwrap()).collect()
 }
 
-pub fn parse_1(text: &str) -> i32 {
+pub fn parse_1(text: &str) -> i64 {
     let lines: Vec<String> = text
         .lines()
         .filter(|l| !l.is_empty())
         .map(|s| s.to_string())
         .collect();
-    xscan(&lines)
-        + xscan(&transpose(&lines))
-        + xscan(&diag(&lines))
-        + xscan(&diag(&mirror(&lines)))
+    (xscan(&lines)
+     + xscan(&transpose(&lines))
+     + xscan(&diag(&lines))
+     + xscan(&diag(&mirror(&lines)))) as i64
 }
 
 fn checkmas(c: u8, ms: &mut i32, ss: &mut i32) {
@@ -76,7 +76,7 @@ fn checkmas(c: u8, ms: &mut i32, ss: &mut i32) {
     }
 }
 
-pub fn parse_2(text: &str) -> i32 {
+pub fn parse_2(text: &str) -> i64 {
     let lines: Vec<_> = text
         .lines()
         .filter(|l| !l.is_empty())
