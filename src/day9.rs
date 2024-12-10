@@ -44,8 +44,64 @@ pub fn parse_1(text: &str) -> i64 {
         .sum::<usize>() as i64
 }
 
-pub fn parse_2(_text: &str) -> i64 {
-    0
+pub fn parse_2(text: &str) -> i64 {
+    // parse
+    // create fid table -> offset + size
+    // create hole list -> offset + size
+    // scan fid table downwards:
+    // scan holes at lower offset
+    // when hole found: move file, shrink/move hole
+    // render sparse map, or compute chksum smarter (with ranges)
+
+    let mut fid_table: Vec<(usize, usize)> = vec![];
+    let mut hole_table: Vec<(usize, usize)> = vec![];
+    let mut offset = 0;
+
+    text.lines()
+        .find(|&line| !line.is_empty())
+        .unwrap()
+        .as_bytes()
+        .iter()
+        .map(|c| (c - b'0') as usize)
+        .enumerate()
+        .for_each(|(i, n)| {
+            if i%2 == 0 {
+                fid_table.push((offset, n));
+            } else {
+                hole_table.push((offset, n));
+            }
+            offset += n;
+        });
+
+    for fid in (0..fid_table.len()).rev() {
+        let (file_offset, file_length) = fid_table[fid];
+        if let Some(hid) = hole_table.iter()
+            .position(|&(hole_offset, hole_length)|
+                  hole_offset < file_offset && hole_length >= file_length) {
+                let (hole_offset, hole_length) = hole_table[hid];
+                fid_table[fid] = (hole_offset, file_length);
+                hole_table[hid] = (hole_offset + file_length,
+                                   hole_length - file_length);
+
+                if let Some(hid2) = hole_table.iter()
+                    .position(|&(h2_offset, h2_length)|
+                              h2_offset + h2_length == file_offset) {
+                        let (h2_offset, mut h2_length) = fid_table[hid2];
+                        h2_length += file_offset;
+                        if fid_table[hid2+1].0 == h2_offset + h2_length {
+                            h2_length += fid_table[hid2+1].1;
+                            hole_table.remove(hid2+1);
+                        }
+                        hole_table[hid2] = (h2_offset, h2_length);
+                    }
+            }
+    }
+
+    fid_table.iter()
+        .enumerate()
+        .map(|(fid, (file_offset, file_length))|
+             fid * ((*file_offset..file_offset+file_length).sum::<usize>()))
+        .sum::<usize>() as i64
 }
 
 #[cfg(test)]
@@ -61,6 +117,6 @@ mod tests {
     }
     #[test]
     fn test_parse2() {
-        assert_eq!(parse_2(&INPUT_TEXT_1), 34);
+        assert_eq!(parse_2(&INPUT_TEXT_1), 2858);
     }
 }
